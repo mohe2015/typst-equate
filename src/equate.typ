@@ -557,12 +557,12 @@
   // rule instead of the equation rule.
   if type(body) == label {
     return {
-      show ref: it => equate-ref(it, ref => it.element.numbering)
+      show ref: it => equate-ref(it, ref => ref.element.numbering)
       ref(body)
     }
   } else if body.func() == ref {
     return {
-      show ref: it => equate-ref(it, ref => it.element.numbering)
+      show ref: it => equate-ref(it, ref => ref.element.numbering)
       body
     }
   }
@@ -731,7 +731,7 @@
   }
 
   // Add show rule for referencing equation lines.
-  show ref: it => equate-ref(it, ref => it.element.numbering)
+  show ref: it => equate-ref(it, ref => ref.element.numbering)
 
   equate-state.update(n => n + 1)
   body
