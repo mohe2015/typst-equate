@@ -74,3 +74,16 @@ product of two vectors.
 
 ![Result of example code (page 1).](assets/example-1.svg)  
 ![Result of example code (page 2).](assets/example-2.svg)
+
+## Development
+
+Create a symlink to more easily develop your package changes:
+
+```
+DEV_TEMPLATE=equate
+DEV_VERSION=0.3.2
+
+mkdir -p ~/.cache/typst/packages/preview/$DEV_TEMPLATE
+rm -R ~/.cache/typst/packages/preview/$DEV_TEMPLATE/$DEV_VERSION
+ln -s $PWD ~/.cache/typst/packages/preview/$DEV_TEMPLATE/$DEV_VERSION
+```

@@ -19,9 +19,11 @@
 // State for tracking whether we're in a nested equation.
 #let nested-state = state("equate/nested-depth", 0)
 
-// Show rule necessary for referencing equation lines, as the number is not
-// stored in a counter, but as metadata in a figure.
-#let equate-ref(it) = {
+/// Function for show rule necessary for referencing equation lines, as the number is not
+/// stored in a counter, but as metadata in a figure.
+/// - it (ref): the reference
+/// - numbering-function ((location) => (..int) => string): Function that takes a location at which the numbering should be evaluated and returns a numbering function.
+#let equate-ref(it, numbering-function) = {
   if it.element == none { return it }
   if it.element.func() != figure { return it }
   if it.element.kind != math.equation { return it }
@@ -50,7 +52,7 @@
       let suffix-start = it.element.numbering.codepoints().rev().position(c => c in counting-symbols)
       it.element.numbering.slice(prefix-end, if suffix-start == 0 { none } else { -suffix-start })
     } else {
-      it.element.numbering
+      numbering-function(it.element.location())
     },
     ..nums
   )
@@ -555,12 +557,12 @@
   // rule instead of the equation rule.
   if type(body) == label {
     return {
-      show ref: equate-ref
+      show ref: it => equate-ref(it, location => it.element.numbering)
       ref(body)
     }
   } else if body.func() == ref {
     return {
-      show ref: equate-ref
+      show ref: it => equate-ref(it, location => it.element.numbering)
       body
     }
   }
@@ -729,7 +731,7 @@
   }
 
   // Add show rule for referencing equation lines.
-  show ref: equate-ref
+  show ref: it => equate-ref(it, location => it.element.numbering)
 
   equate-state.update(n => n + 1)
   body
