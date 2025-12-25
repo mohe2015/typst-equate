@@ -22,7 +22,7 @@
 /// Function for show rule necessary for referencing equation lines, as the number is not
 /// stored in a counter, but as metadata in a figure.
 /// - it (ref): the reference
-/// - numbering-function ((location) => (..int) => string): Function that takes a location at which the numbering should be evaluated and returns a numbering function.
+/// - numbering-function ((ref) => (..int) => string): Function that takes a ref of which the numbering should be evaluated and returns a numbering function.
 #let equate-ref(it, numbering-function) = {
   if it.element == none { return it }
   if it.element.func() != figure { return it }
@@ -52,7 +52,7 @@
       let suffix-start = it.element.numbering.codepoints().rev().position(c => c in counting-symbols)
       it.element.numbering.slice(prefix-end, if suffix-start == 0 { none } else { -suffix-start })
     } else {
-      numbering-function(it.element.location())
+      numbering-function(it)
     },
     ..nums
   )
@@ -557,12 +557,12 @@
   // rule instead of the equation rule.
   if type(body) == label {
     return {
-      show ref: it => equate-ref(it, location => it.element.numbering)
+      show ref: it => equate-ref(it, ref => it.element.numbering)
       ref(body)
     }
   } else if body.func() == ref {
     return {
-      show ref: it => equate-ref(it, location => it.element.numbering)
+      show ref: it => equate-ref(it, ref => it.element.numbering)
       body
     }
   }
@@ -731,7 +731,7 @@
   }
 
   // Add show rule for referencing equation lines.
-  show ref: it => equate-ref(it, location => it.element.numbering)
+  show ref: it => equate-ref(it, ref => it.element.numbering)
 
   equate-state.update(n => n + 1)
   body
