@@ -11,3 +11,7 @@ $ a + b &= lr(\{#block[$ e \ #block[$ f \ g $] $]) $
 
 $ a + b &= c \
         &= lr(\{#block[$ e \ f $] + #block[$ g \ h $]) $
+
+#let vst = $v &= v_0 + a t$
+$ vst \
+  &= 0 + 9.81 dot 2 $

@@ -166,9 +166,27 @@
   math.equation(children.map(replace-single).join())
 }
 
+// Unpack nested equations.
+#let unpack-nested(eq) = {
+  let unpack-single(child) = {
+    if type(child) == content and child.func() == math.equation {
+      unpack-nested(child).body
+    } else {
+      child
+    }
+  }
+
+  if eq.body.func() == sequence {
+    math.equation(eq.body.children.map(unpack-single).join())
+  } else {
+    math.equation(unpack-single(eq.body))
+  }
+}
+
 // Extract lines and trim spaces.
 #let to-lines(equation) = {
   equation = replace-lr(equation)
+  equation = unpack-nested(equation)
 
   let lines = if equation.body.func() == sequence {
     equation.body.children.split(linebreak())
