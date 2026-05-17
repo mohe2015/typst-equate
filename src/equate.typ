@@ -1,3 +1,5 @@
+#import "@preview/unichar:0.4.0"
+
 // Element function for alignment points.
 #let align-point = $&$.body.func()
 
@@ -111,29 +113,37 @@
         ([], child.body, [])
       }
 
-      // Don't take unstretchable boundaries into account.
-      if height(first) == height(math.stretch(size: 200%, first)) {
-        mid = (first, ..mid)
-        first = none
-      }
-      if height(last) == height(math.stretch(size: 200%, last)) {
-        mid = (..mid, last)
-        last = none
-      }
-
       let size = calc.max(..lines.map(line => {
         height(math.lr(size: lr-size, first + line.join() + last))
       }))
 
       // Manually stretch first/last and mid elements.
-      let stretched(first, mid, last, size) = {
-        if first != none { math.stretch(size: size, first) }
+      let stretched(first, mid, last, size) = {  
+        let stretch-if-delimiter(elem, apply) = {
+          let class = if elem.has("class") {
+            elem.class
+          } else if elem.has("text") and elem.text.len() == 1 {
+            unichar.codepoint(elem.text).math-class
+          }
+
+          if class in ("opening", "fence", "closing") {
+            elem = math.class(apply, math.stretch(size: size, elem))
+          }
+
+          elem
+        }
+
+        if first != none {
+          stretch-if-delimiter(first, "opening")
+        }
         mid.map(child => if child.func() == math.mid {
-          math.class("fence", math.stretch(size: size, child))
+          math.class("relation", math.stretch(size: size, child))
         } else {
           replace-single(child)
         }).join()
-        if last != none { math.stretch(size: size, last) }
+        if last != none {
+          stretch-if-delimiter(last, "closing")
+        }
       }
 
       // Take possible short-fall into account. We may need multiple iterations
