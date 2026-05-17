@@ -103,6 +103,9 @@
       }
 
       let (first, ..mid, last) = if child.body.func() == sequence {
+        if child.body.children == () {
+          return none
+        }
         child.body.children
       } else {
         ([], child.body, [])
