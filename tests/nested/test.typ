@@ -5,12 +5,13 @@
 
 // Test handling of nested equations.
 
-$ a + b &= lr(\{#block[$ e \ #block[$ f \ g $] $]) $
+// https://github.com/typst/typst/issues/8516
+$ a + b &= lr(\{#box(baseline: horizon)[$ e \ #box(baseline: horizon)[$ f \ g $] $]) $
 
 #set math.equation(numbering: "(1.1)")
 
 $ a + b &= c \
-        &= lr(\{#block[$ e \ f $] + #block[$ g \ h $]) $
+        &= lr(\{#box(baseline: horizon)[$ e \ f $] + #box(baseline: horizon)[$ g \ h $]) $
 
 #let vst = $v &= v_0 + a t$
 $ vst \
