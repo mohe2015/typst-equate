@@ -44,7 +44,7 @@
     message: "cannot reference equation without numbering."
   )
 
-  let num = numbering(
+  let num = it.element.counter.display(at: it.element.location(), (..) => numbering(
     if type(it.element.numbering) == str {
       // Trim numbering pattern of prefix and suffix characters.
       let counting-symbols = ("1", "a", "A", "i", "I", "一", "壹", "あ", "い", "ア", "イ", "א", "가", "ㄱ", "*", "①", "⓵")
@@ -55,7 +55,7 @@
       it.element.numbering
     },
     ..nums
-  )
+  ))
 
   let supplement = if it.supplement == auto {
     it.element.supplement
